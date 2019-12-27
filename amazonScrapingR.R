@@ -72,6 +72,7 @@ vlinkAspiradora
 
 
 ################ EXTRAER INFORMACION DE LOS OBJETOS DE LAS SUB-URL'S ################ 
+######################### EXTRAER Titulo del Producto ############################### 
 
 url <- ("https://www.amazon.es/Muzili-Aspiradora-Aspirador-Recargable-Filtraci%C3%B3n/dp/B07R5HCHR1/ref=sr_1_164_sspa?__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&keywords=aspiradora&qid=1577409616&sr=8-164-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExU0tOODZLTzNDSk5IJmVuY3J5cHRlZElkPUEwMDQxNjE3MVlXTUpONjFZV0c4ViZlbmNyeXB0ZWRBZElkPUEwNDIzNTM1MUtWODRXU1ozT1k2MiZ3aWRnZXROYW1lPXNwX2J0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU=")
 nombre <- "#productTitle"
@@ -79,3 +80,42 @@ pagina_web <- read_html(url)
 nombre_nodo<- html_node(pagina_web, nombre)
 nombre_texto <- html_text(nombre_nodo)
 nombre_texto
+######################### EXTRAER Opiniones del Producto ############################### 
+
+opiniones <- "#acrCustomerReviewText"
+opiniones_nodo<- html_node(pagina_web, opiniones)
+opiniones_texto <- html_text(opiniones_nodo)
+opiniones_texto
+
+
+######################### EXTRAER Precio del Producto ############################### 
+
+precio <- "#priceblock_ourprice"
+precio_nodo<- html_node(pagina_web, precio)
+precio_texto <- html_text(precio_nodo)
+precio_texto
+
+######################### EXTRAER Tabla de Descripcion del Producto ############################### 
+
+tabla <- "#prodDetails > div > div.column.col1 > div > div.content.pdClearfix > div > div > table"
+tabla_nodo<- html_node(pagina_web, tabla)
+tabla_tab <- html_table(tabla_nodo)
+tabla_tab
+class(tabla_tab)
+### Modificar el dataFrame var1 col var2 row en un vector
+val <- tabla_tab$X2
+val
+##tranformada de val 
+res_tabla <- data.frame(t(val))
+res_tabla
+tabla_name <- tabla_tab$X1
+tabla_name
+#colocar los nombres de columnas 
+colnames(res_tabla) <- tabla_name
+res_tabla
+class(res_tabla)
+str(res_tabla)
+# convertir a character nuestro data frame
+resultado_aspiradoras <- c(nombre_texto,precio_texto,opiniones_texto,as.character(res_tabla$`Peso del producto`), as.character(res_tabla$Potencia), as.character(res_tabla$`Dimensiones del producto`), as.character(res_tabla$Marca))
+resultado_aspiradoras
+class(resultado_aspiradoras)
