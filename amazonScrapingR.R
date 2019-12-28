@@ -1,6 +1,8 @@
-####################################################################################
-##########################                          ################################
-#############################                   ####################################
+#########################  INICIA PROCESO DE RECOPILACION  ##########################
+#########################  INICIA PROCESO DE RECOPILACION  ##########################
+#########################  INICIA PROCESO DE RECOPILACION  ##########################
+##########################                                ###########################
+#############################                             ###########################
 ################################# PROCESO I #######################################
 
 ############## EXTRAER LA URL DEL PRIMER OBJETO EN LISTA ###########################
@@ -131,7 +133,7 @@ class(resultado_aspiradoras)
 ################################# PROCESO II #######################################
 
 getArticulo <- function (url){
-  
+  print(url)
   ######################### EXTRAER titulo del Producto ############################### 
   
   nombre <- "#productTitle"
@@ -158,24 +160,29 @@ getArticulo <- function (url){
   
   tabla <- "#prodDetails > div > div.column.col1 > div > div.content.pdClearfix > div > div > table"
   tabla_nodo<- html_node(pagina_web, tabla)
-  tabla_tab <- html_table(tabla_nodo)
-  tabla_tab
-  class(tabla_tab)
-  ### Modificar el dataFrame var1 col var2 row en un vector
-  val <- tabla_tab$X2
-  val
-  ##tranformada de val 
-  res_tabla <- data.frame(t(val))
-  res_tabla
-  tabla_name <- tabla_tab$X1
-  tabla_name
-  #colocar los nombres de columnas 
-  colnames(res_tabla) <- tabla_name
-  res_tabla
-  class(res_tabla)
-  str(res_tabla)
+  if (!is.na(tabla_nodo)) {
+    tabla_tab <- html_table(tabla_nodo)
+    tabla_tab
+    class(tabla_tab)
+    ### Modificar el dataFrame var1 col var2 row en un vector
+    val <- tabla_tab$X2
+    val
+    ##tranformada de val 
+    res_tabla <- data.frame(t(val))
+    res_tabla
+  
+    tabla_name <- tabla_tab$X1
+    tabla_name
+    #colocar los nombres de columnas 
+    colnames(res_tabla) <- tabla_name
+    res_tabla
+    class(res_tabla)
+    str(res_tabla)
+  }
+  
   col <- c("Peso del producto ", "Dimensiones del producto", "Marca", "Potencia")
   
+  #esta condicional es por si el html no contiene lo que pedimos en su estructura.
   if(length(res_tabla) == 0 ) {
     #NO hay detalles todo a menos -1
     mitab<- data.frame(colnames(col))
@@ -221,5 +228,21 @@ getArticulo <- function (url){
   articulo
 }
 
-res<- getArticulo(vlinkAspiradora[2])
+res<- getArticulo(vlinkAspiradora[4])
 res
+#volvemos una matrix con saplly para unir las variables con las sub-URL'S
+resultado_datos<- sapply(vlinkAspiradora, getArticulo)
+
+class(resultado_datos)
+dim(resultado_datos)
+View(resultado_datos)
+#vista de transformada inversa ( COLUMNAS VARIABLES / FILAS OBSERVACONES)
+res<- t(resultado_datos)
+View(res)
+mis_aspiradoras<- as.data.frame(res)
+colnames(res)<- c("Nombre", "Precio", "Opiniones", "Peso del producto", "Dimensiones del producto", "Marca", "Potencia")
+row.names(res)<- c(1:200)
+View(res)
+#########################  ACABÓ PROCESO DE RECOPILACION  ##########################
+#########################  ACABA PROCESO DE RECOPILACION  ##########################
+#########################  ACABA PROCESO DE RECOPILACION  ##########################
