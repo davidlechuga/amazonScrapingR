@@ -124,7 +124,7 @@ res_tabla
 class(res_tabla)
 str(res_tabla)
 # convertir a character nuestro data frame
-resultado_aspiradoras <- c(nombre_texto,precio_texto,opiniones_texto,as.character(res_tabla$`Peso del producto`), as.character(res_tabla$Potencia), as.character(res_tabla$`Dimensiones del producto`), as.character(res_tabla$Marca))
+resultado_aspiradoras <- c(nombre_texto,precio_texto,opiniones_texto, as.character(res_tabla$`Dimensiones del producto`), as.character(res_tabla$Marca), as.character(res_tabla$Potencia))
 resultado_aspiradoras
 class(resultado_aspiradoras)
 ####################################################################################
@@ -133,7 +133,7 @@ class(resultado_aspiradoras)
 ################################# PROCESO II #######################################
 
 getArticulo <- function (url){
-  print(url)
+  #print(url)
   ######################### EXTRAER titulo del Producto ############################### 
   
   nombre <- "#productTitle"
@@ -180,7 +180,7 @@ getArticulo <- function (url){
     str(res_tabla)
   }
   
-  col <- c("Peso del producto ", "Dimensiones del producto", "Marca", "Potencia")
+  col <- c( "Dimensiones del producto", "Marca", "Potencia")
   
   #esta condicional es por si el html no contiene lo que pedimos en su estructura.
   if(length(res_tabla) == 0 ) {
@@ -199,9 +199,7 @@ getArticulo <- function (url){
     dfzero
     #el Data Frame lo convertimos en character para amnipular la matriz
     
-    peso<- as.character(res_tabla$`Peso del producto`)
-    #condicionales para PESO
-    if (length(peso)== 0) peso <- "-1"
+   
     
     dimen<- as.character(res_tabla$`Dimensiones del producto`)
     #condicionales para DIMENSIONES
@@ -217,14 +215,13 @@ getArticulo <- function (url){
     
     ##Asignamos los valores de nuestras variables a nuestro dataFrame
     dfzero
-    dfzero$`Peso del producto` <- peso
     dfzero$`Dimensiones del producto` <- dimen
     dfzero$`Marca` <- marca
     dfzero$`Potencia`<- potencia
     mitab <- dfzero
     colnames(mitab) <- col
   }
-  articulo <- c(nombre_texto,precio_texto,opiniones_texto, as.character(mitab$`Peso del producto`[1]), as.character(mitab$`Dimensiones del producto`), as.character(mitab$Marca), as.character(mitab$Potencia))
+  articulo <- c(nombre_texto,precio_texto,opiniones_texto, as.character(mitab$`Dimensiones del producto`), as.character(mitab$Marca), as.character(mitab$Potencia))
   articulo
 }
 
@@ -240,9 +237,10 @@ View(resultado_datos)
 res<- t(resultado_datos)
 View(res)
 mis_aspiradoras<- as.data.frame(res)
-colnames(res)<- c("Nombre", "Precio", "Opiniones", "Peso del producto", "Dimensiones del producto", "Marca", "Potencia")
+colnames(res)<- c("Nombre", "Precio", "Opiniones", "Dimensiones del producto", "Marca", "Potencia")
 row.names(res)<- c(1:200)
 View(res)
+
 #########################  ACABÓ PROCESO DE RECOPILACION  ##########################
 #########################  ACABA PROCESO DE RECOPILACION  ##########################
 #########################  ACABA PROCESO DE RECOPILACION  ##########################
